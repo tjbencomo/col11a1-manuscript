@@ -7,6 +7,8 @@
 # MAFs are then re-annotated with maf2maf using VEP and selecting
 # variant effects for the default Ensembl transcript except for
 # COL11A1, which uses a custom transcript specified in override-ensts.
+# Some variants do not match the reference allele and have been excluded
+# from analysis. These can be found in the excluded-variants folder
 
 singularity: "docker://continuumio/miniconda3"
 
@@ -26,7 +28,8 @@ rule maf2maf:
     output:
         "mafs/{dataset}.maf"
     params:
-        tmp_dir=os.path.join("{dataset}-tmp")
+        tmp_dir=os.path.join("{dataset}-tmp"),
+        center="{dataset}"
     conda:
         "envs/annotation.yml"
     shell:
@@ -40,7 +43,8 @@ rule maf2maf:
             --tmp-dir  {params.tmp_dir} \
             --filter-vcf 0 \
             --custom-enst overriden-ensts \
-            --cache-version 99
+            --cache-version 99 \
+            --maf-center {params.center}
         """
 
 

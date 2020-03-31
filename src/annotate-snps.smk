@@ -28,8 +28,7 @@ rule maf2maf:
     output:
         "mafs/{dataset}.maf"
     params:
-        tmp_dir=os.path.join("{dataset}-tmp"),
-        center="{dataset}"
+        tmp_dir=os.path.join("{dataset}-tmp")
     conda:
         "envs/annotation.yml"
     shell:
@@ -43,8 +42,7 @@ rule maf2maf:
             --tmp-dir  {params.tmp_dir} \
             --filter-vcf 0 \
             --custom-enst overriden-ensts \
-            --cache-version 99 \
-            --maf-center {params.center}
+            --cache-version 99
         """
 
 

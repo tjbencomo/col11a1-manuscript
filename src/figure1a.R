@@ -8,7 +8,7 @@ library(dplyr)
 library(stringr)
 library(tidyr)
 
-genes <- c('TP53', 'COL11A1', 'HRAS', 'VWDE', 'KHDRBS3', 
+genes <- c('TP53', 'COL11A1', 'HRAS', 'VWDE', 'KHDRBS3',
            'COL4A4', 'BCLAF1', 'CDKN2A', 'NOTCH1')
 mutation_types <- c("Missense_Mutation", "Splice_Site", "Nonsense_Mutation")
 
@@ -60,7 +60,7 @@ mutated_ratios <- mutations %>%
 label_order <- mutated_ratios$label
 
 # Change fill ordering of cohorts to match sample order
-mutations %>%
+p <- mutations %>%
   count(patient, Hugo_Symbol, .drop = F) %>%
   left_join(patients) %>%
   left_join(mutated_ratios) %>%
@@ -86,42 +86,5 @@ mutations %>%
   scale_fill_manual(values = colors) +
   labs(x = "SCC-Normal Pairs", y = "", fill = "")
 
+print(p)
 
-
-
-# # Compute Mutations per base
-# gene_info <- mutations %>%
-#   select(Hugo_Symbol, Transcript_ID) %>%
-#   distinct()
-# 
-# mart <- biomaRt::useDataset("hsapiens_gene_ensembl", biomaRt::useMart("ensembl"))
-# exons <- biomaRt::getBM(
-#   attributes=c("ensembl_transcript_id", "cds_length"),
-#   filter = "ensembl_transcript_id", values = unique(mutations$Transcript_ID),
-#   mart= mart
-#   ) %>%
-#   inner_join(gene_info, by = c("ensembl_transcript_id" = "Transcript_ID")) %>%
-#   mutate(hgnc_symbol = factor(Hugo_Symbol, levels = rev(genes)))
-# 
-# variants <- read_delim("data/mutations.maf.gz", 
-#                         "\t", escape_double = FALSE, trim_ws = TRUE, 
-#                         col_types = c(
-#                           t_ref_count = "c", t_alt_count = "c", t_depth = "c", 
-#                           n_depth = "c", n_alt_count = "c", n_ref_count = "c"
-#                         )
-#                       )  %>%
-#   filter(Hugo_Symbol %in% genes) %>%
-#   filter(Variant_Classification %in% c("Missense_Mutation", "Silent")) %>%
-#   mutate(patient = factor(patient, levels = patients$patient),
-#          Hugo_Symbol = factor(Hugo_Symbol, levels = rev(genes)),
-#          Variant_Classification = factor(Variant_Classification))
-# 
-# variants %>%
-#   count(Hugo_Symbol, Variant_Classification) %>%
-#   spread(Variant_Classification, n) %>%
-#   mutate(ratio = Missense_Mutation / Silent) %>%
-#   inner_join(exons, by = c("Hugo_Symbol" = "hgnc_symbol")) %>%
-#   mutate(mutations.per.base = ratio / cds_length) %>%
-#   arrange(desc(mutations.per.base)) %>%
-#   select(Hugo_Symbol, mutations.per.base, ratio, Missense_Mutation, Silent, cds_length, 
-#          ensembl_transcript_id)

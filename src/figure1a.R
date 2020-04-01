@@ -84,7 +84,8 @@ p <- mutations %>%
         panel.grid.minor = element_blank(),
         panel.background = element_blank()) +
   scale_fill_manual(values = colors) +
-  labs(x = "SCC-Normal Pairs", y = "", fill = "")
+  labs(x = "SCC-Normal Pairs", y = "", fill = "") +
+  scale_y_discrete(expand=c(0,0))
 
 print(p)
 

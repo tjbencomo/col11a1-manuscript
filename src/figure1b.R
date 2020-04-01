@@ -31,7 +31,7 @@ mutations <- read_delim("data/mutations.maf.gz",
 
 mutation_order <- c("Splicing", "Nonsense", "Missense")
 colors <- c("#407E47", "#5AB1AB", "#80AACD")
-mutations %>%
+p <- mutations %>%
   mutate(Variant_Classification = case_when(
     Variant_Classification == "Splice_Site" ~ "Splicing",
     Variant_Classification == "Nonsense_Mutation" ~ "Nonsense",
@@ -40,12 +40,12 @@ mutations %>%
   mutate(Variant_Classification = factor(Variant_Classification, levels = mutation_order)) %>%
   ggplot(aes(Hugo_Symbol, ..count../sum(..count..))) +
   geom_bar(position = "fill", aes(fill = Variant_Classification)) +
-  scale_y_continuous(labels = percent_format(), expand=c(0,0)) +
-  labs(x = "", y = "% Mutations") +
+  scale_y_continuous(labels = percent_format(), expand=c(0,0), limits = c(0, 1.03)) +
+  labs(x = "", y = "% Mutations", fill = "Mutation Type") +
   theme_cowplot() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         axis.line = element_line(colour = 'black', size = 1)) +
-  guides(fill=guide_legend(title="Mutation Type")) +
   scale_fill_manual(values = colors)
- 
+
+print(p) 
   

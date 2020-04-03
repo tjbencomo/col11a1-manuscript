@@ -8,8 +8,8 @@ library(dplyr)
 library(stringr)
 library(tidyr)
 
-genes <- c('TP53', 'COL11A1', 'HRAS', 'VWDE', 'KHDRBS3',
-           'COL4A4', 'BCLAF1', 'CDKN2A', 'NOTCH1')
+genes <- c("TP53", "CDKN2A", "COL11A1", "KHDRBS3", "CLASP2",
+           "COL4A4", "KNSTRN", "HRAS", "NOTCH1")
 mutation_types <- c("Missense_Mutation", "Splice_Site", "Nonsense_Mutation")
 
 patients <- read_csv("data/patient_metadata.csv", col_types = c(patient = "f")) %>%

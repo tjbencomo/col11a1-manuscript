@@ -1,0 +1,325 @@
+---
+title: "Manuscript Survival Analysis"
+output: html_notebook
+---
+
+This notebook contains analysis and figures for the COL11A1 manuscript.
+Figure 3C and Table S5A and Figure S5B are in this notebook. See
+`generate_hnsc_cohort.R` for the script to generate the survival
+data.
+
+
+```{r include=FALSE}
+library(readr)
+library(dplyr)
+library(rms)
+library(survminer)
+library(broom)
+library(gridExtra)
+library(corrplot)
+```
+
+
+## ETL
+
+Load patient info with clinical and transcriptomic measurements
+
+```{r echo=TRUE}
+data_dir <- "../data"
+patients <- read_csv(file.path(data_dir, "tcga_hnsc_cohort.csv"))
+head(patients)
+```
+
+Load Enrichr pathways and combine pathways that are related to integrins into a single
+integrin gene set
+
+```{r include=FALSE}
+clinical_cols <- c("Sample", "patient_id", "_PATIENT", "OS", "OS.time", 
+                   "age", "gender", "clinical_stage", "radiation_therapy")
+full_signature <- colnames(patients)[!colnames(patients) %in% clinical_cols]
+enrichr_dir <- "enrichr_sigs"
+beta1_integrin_sig <- scan(file.path(data_dir, enrichr_dir, 
+                                     "beta1_integrin_cell_surface_interactions.txt"),
+                       what = character())
+beta3_integrin_sig <- scan(file.path(data_dir, enrichr_dir, 
+                                     "beta3_integrin_cell_surface_interactions.txt"),
+                       what = character())
+alpha6beta4_signaling_sig <- scan(file.path(data_dir, enrichr_dir, "a6b4_signaling.txt"),
+                              what = character())
+focal_adhesion_sig <- scan(file.path(data_dir, enrichr_dir, "focal_adhesion.txt"),
+                              what = character())
+egfr_signaling_sig <- scan(file.path(data_dir, enrichr_dir, "egf_egfr_signaling.txt"),
+                              what = character())
+integrin_related_pathways <- c(alpha6beta4_signaling_sig, beta1_integrin_sig, 
+                               beta3_integrin_sig, focal_adhesion_sig)
+```
+
+
+## Patient Characteristics
+
+```{r echo=FALSE}
+age.plot <- patients %>% 
+  ggplot(aes(age)) +
+  geom_histogram(bins=40) +
+  labs(x = "Age", y = "Number of Patients") +
+  ggtitle("Age Distribution of Patients") +
+  guides(fill=FALSE)
+gender.plot <- patients %>% 
+  ggplot(aes(gender)) +
+  geom_bar(aes(fill = gender)) +
+  labs(x = "Gender", y = "Number of Patients") +
+  ggtitle("Gender Distribution of Patients") +
+  guides(fill=FALSE)
+radiation.plot <- patients %>% 
+  ggplot(aes(radiation_therapy)) +
+  geom_bar(aes(fill = radiation_therapy)) +
+  labs(x = "Received Radiation Therapy", y = "Number of Patients") +
+  ggtitle("Radiation Treatment of Patients") +
+  guides(fill=FALSE)
+stage.plot <- patients %>% 
+  ggplot(aes(clinical_stage)) +
+  geom_bar(aes(fill = clinical_stage)) +
+  labs(x = "Clinical Stage", y = "Number of Patients") +
+  ggtitle("Clinical Stage of Patients") +
+  guides(fill=FALSE)
+grid.arrange(age.plot, gender.plot, radiation.plot, stage.plot)
+```
+
+
+```{r echo=FALSE}
+os.km <- ggsurvplot(survfit(Surv(OS.time, OS) ~ 1, data = patients), 
+           data = patients, legend.labs = c("All"))
+stage.km <- ggsurvplot(survfit(Surv(OS.time, OS) ~ clinical_stage, data = patients), 
+           data = patients, legend.labs = c("Stage I", "Stage II", "Stage III", "Stage IV"))
+gender.km <- ggsurvplot(survfit(Surv(OS.time, OS) ~ gender, data = patients), 
+           data = patients, legend.labs = c("Female", "Male"))
+radiation.km <- ggsurvplot(survfit(Surv(OS.time, OS) ~ radiation_therapy, data = patients), 
+           data = patients, legend.labs = c("No Radiation Therapy", "Radiation Therapy"))
+grid.arrange(os.km$plot, stage.km$plot, gender.km$plot, radiation.km$plot)
+```
+
+## Pathway Signature Prognostic Factor Analysis
+
+### Pathway Signature Creation
+
+Pathway expression is represented as the sum of gene expression for all the genes in the pathway. 
+The expression for each gene is Z-score transformed before pathway creation to prevent genes
+with higher expression having unbalanced weight on the pathway expression.
+
+Several pathways are created:
+
+1. 264 gene signature consisting of all the upregulated genes from the RNASeq screen
+2. Alpha6-Beta4 signaling pathway from Enrichr
+3. Beta1 Integrin signaling pathway from Enrichr
+4. Beta3 Integrin signaling pathway from Enrichr
+5. Focal Adhesion Enrichr pathway
+6. EGF/EGFR signaling pathway from Enrichr
+7. Integrin pathway which combines Alpha6-Beta4 signaling, 
+Beta1 Integrin signaling, Beta4 Integrin signaling, and Focal Adhesion into a single pathway.
+This was created because the individual pathways in this meta pathway were highly correlated
+
+First we Z-score transform individual gene expression
+
+```{r}
+enrichr_pathways <- c("beta1_integrin", "beta3_integrin", 
+                      "alpha6beta4", "focal_adhesion", 
+                      "egfr_signaling")
+scaled_expr <- scale(patients[, full_signature])
+patients <- cbind(
+  select(patients, OS.time, OS, age, gender, clinical_stage,
+         radiation_therapy),
+  scaled_expr
+) %>%
+  mutate(beta1_integrin = scale(rowSums(.[beta1_integrin_sig]))[, 1],
+         beta3_integrin = scale(rowSums(.[beta3_integrin_sig]))[, 1],
+         alpha6beta4 = scale(rowSums(.[alpha6beta4_signaling_sig]))[, 1],
+         focal_adhesion = scale(rowSums(.[focal_adhesion_sig]))[, 1],
+         egfr_signaling = scale(rowSums(.[egfr_signaling_sig]))[, 1],
+         full_signature = scale(rowSums(.[full_signature]))[, 1],
+         integrin_pathway = scale(rowSums(.[integrin_related_pathways]))[, 1])
+```
+
+Correlation plot confirming the Beta integrin and focal adhesion pathways are correlated
+
+```{r}
+pheatmap::pheatmap(cor(select(patients, enrichr_pathways), method="spearman"),
+                   cluster_rows = TRUE,
+                   cluster_cols = TRUE)
+```
+
+```{r}
+ddist <- datadist(patients)
+options(datadist = "ddist")
+```
+
+
+### 264 Gene Signature
+
+```{r}
+full_sig.fit <- cph(Surv(OS.time, OS) ~ age + gender + clinical_stage + 
+                      radiation_therapy + full_signature, data=patients, x=T, y=T)
+full_sig.fit
+```
+
+```{r}
+anova(full_sig.fit)
+```
+
+We decide to stratify radiation therapy as evidence suggests it violates PH
+
+```{r}
+full_sig.phtest <- cox.zph(full_sig.fit)
+full_sig.phtest
+```
+
+```{r}
+full_sig.fit.strat <- cph(Surv(OS.time, OS) ~ age + gender + clinical_stage + 
+                            strat(radiation_therapy) + full_signature, data=patients, x=T, y=T)
+full_sig.fit.strat
+```
+
+
+```{r}
+anova(full_sig.fit.strat)
+```
+
+```{r}
+full_sig.phtest.strat <- cox.zph(full_sig.fit.strat)
+full_sig.phtest.strat
+```
+
+```{r}
+ggcoxzph(full_sig.phtest.strat)
+```
+
+Adequacy Index
+
+```{r}
+subset.fit <- cph(Surv(OS.time, OS) ~ age + gender + clinical_stage + 
+                            strat(radiation_therapy), data=patients, x=T, y=T)
+print(lrtest(subset.fit, full_sig.fit.strat))
+print(paste("New information added: ", 
+            1 - (subset.fit$stats['Model L.R.'] / full_sig.fit.strat$stats['Model L.R.']),
+            "%", sep=""))
+```
+
+Figure S5B
+
+```{r}
+ggplot(Predict(full_sig.fit.strat, 
+               full_signature)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  ggtitle("Association Between 264 Gene Signature And Overall Survival") +
+  labs(x = "Pathway Expression (Z-Score)",
+       y = "Log Hazard Ratio",
+       caption = "") +
+  annotate("text", x = -1.5, y = .75, label = "p = 5.56e-4")
+```
+
+Figure 3C
+
+```{r}
+patients.full_sig.km <- patients %>%
+  mutate(full_sig_group = case_when(
+    full_signature > 0 ~ "Upregulated",
+    full_signature <= 0 ~ "Downregulated"
+  ))
+full.sig.km.fit <- survfit(Surv(OS.time, OS) ~ full_sig_group, data=patients.full_sig.km)
+survminer::ggsurvplot(full.sig.km.fit, data=patients.full_sig.km, legend.labs =c("Downregulated", "Upregulated"))
+```
+
+Figure S5A (Table)
+
+```{r}
+full_sig.coxph.fit <- coxph(Surv(OS.time, OS) ~ age + gender + clinical_stage + 
+                      radiation_therapy + full_signature, data=patients)
+full_sig.fit.table <- broom::tidy(full_sig.coxph.fit) %>%
+  mutate(HR = exp(estimate),
+         low.ci = exp(conf.low),
+         high.ci = exp(conf.high),
+         CI = paste(round(low.ci, 2), "-", round(high.ci, 2), sep = "")) %>%
+  select(term, HR, CI, p.value) %>%
+  rename(`Prognostic Factor` = "term", `P-Value` = p.value)
+full_sig.fit.table
+```
+
+### Integrin Pathway Signature
+
+All the genes encompassed by the integrin metapathway
+
+```{r}
+integrin_related_pathways
+```
+
+We automatically stratify radiation therapy because it violated PH in the 264 gene signature model.
+
+```{r}
+integrin.fit <- cph(Surv(OS.time, OS) ~ age + gender + clinical_stage + 
+                      strat(radiation_therapy) + integrin_pathway + egfr_signaling, 
+                    data=patients, x=T, y=T)
+integrin.fit
+```
+
+```{r}
+anova(integrin.fit)
+```
+
+
+```{r}
+integrin.fit.phtest <- cox.zph(integrin.fit)
+integrin.fit.phtest
+```
+
+
+```{r}
+ggcoxzph(integrin.fit.phtest)
+```
+
+Adequacy Index
+
+```{r}
+integrin.fit.subset <- cph(Surv(OS.time, OS) ~ age + gender + clinical_stage + 
+                      strat(radiation_therapy) + egfr_signaling, 
+                    data=patients, x=T, y=T)
+print(lrtest(integrin.fit.subset, integrin.fit))
+print(paste("New information added: ", 
+            1 - (integrin.fit.subset$stats['Model L.R.'] / integrin.fit$stats['Model L.R.']),
+            "%", sep=""))
+```
+
+
+```{r}
+ggplot(Predict(integrin.fit, 
+               integrin_pathway)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  ggtitle("Association Between Integrin Signature And Overall Survival") +
+  labs(x = "Pathway Expression (Z-Score)",
+       y = "Log Hazard Ratio",
+       caption = "") +
+  annotate("text", x = -1.5, y = .75, label = "p = 0.0032")
+```
+
+
+```{r}
+patients.integrin.km <- patients %>%
+  mutate(integrin_sig_group = case_when(
+    integrin_pathway > 0 ~ "Upregulated",
+    integrin_pathway <= 0 ~ "Downregulated"
+  ))
+integrin.sig.km.fit <- survfit(Surv(OS.time, OS) ~ integrin_sig_group, data=patients.integrin.km)
+survminer::ggsurvplot(integrin.sig.km.fit, data=patients.integrin.km, legend.labs =c("Downregulated", "Upregulated"))
+```
+
+```{r}
+integrin.coxph.fit <- coxph(Surv(OS.time, OS) ~ age + gender + clinical_stage + 
+                      radiation_therapy + integrin_pathway + egfr_signaling, data=patients)
+integrin.fit.table <- broom::tidy(integrin.coxph.fit) %>%
+  mutate(HR = exp(estimate),
+         low.ci = exp(conf.low),
+         high.ci = exp(conf.high),
+         CI = paste(round(low.ci, 2), "-", round(high.ci, 2), sep = "")) %>%
+  select(term, HR, CI, p.value) %>%
+  rename(`Prognostic Factor` = "term", `P-Value` = p.value)
+integrin.fit.table
+```
+

@@ -6,7 +6,9 @@
 # Pickering is aligned to hg19 and is also 1 indexed based.
 # WARNING: It is important to note pyliftover treats coordinates as 0 indexed,
 # so it is critical to subtract 1 from coordinates before using pyliftover. 
-#After coordinates have been lifted over, they'll need to be converted back to 1 based
+# After coordinates have been lifted over, they'll need to be converted back to 1 based
+# This is accounted for in the script.
+
 
 import os
 import numpy as np

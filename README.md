@@ -13,3 +13,7 @@ then reannotated using VEP and maf2maf. See the Snakemake workflow `annotate-snp
 `merge_mafs.R` aggregates the three annotated MAFs into a single
 combined MAF, `mutations.maf.gz`. 
 This file was used for analysis and figure generation.
+
+## Dependencies
+`liftover.py` requires the `pyliftover` library. You can build a conda environment with `envs/liftover.yaml`
+to run `liftover.py`

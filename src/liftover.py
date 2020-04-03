@@ -14,7 +14,7 @@ from pyliftover import LiftOver
 import pandas as pd
 
 def concat_cho_data():
-    filepath = os.path.join('../data', 'stab_1_8WES.xls')
+    filepath = os.path.join('../data/original-callsets', 'stab_1_8WES.xls')
     sheets = pd.read_excel(filepath, sheet_name = None)
     mutation_tables = []
     for sheet in sheets:
@@ -37,7 +37,7 @@ def liftover_cho(df):
     return df
 
 def load_pickering():
-    filepath = os.path.join('../data', 'NIHMS635298-supplement-3_39WES.xlsx')
+    filepath = os.path.join('../data/original-callsets', 'NIHMS635298-supplement-3_39WES.xlsx')
     df = pd.read_excel(filepath, header = 2)
     return df
 

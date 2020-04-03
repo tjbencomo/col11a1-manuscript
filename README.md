@@ -14,6 +14,8 @@ then reannotated using VEP and maf2maf. See the Snakemake workflow `annotate-snp
 combined MAF, `mutations.maf.gz`. 
 This file was used for analysis and figure generation.
 
+Survival analyses, including Figures 3C and Supplemental Figure 5, can be found in `manuscript_survival_analysis.Rmd`
+
 ## Dependencies
 `liftover.py` requires the `pyliftover` library. You can build a conda environment with `envs/liftover.yaml`
 to run `liftover.py`

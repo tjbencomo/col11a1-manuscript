@@ -17,5 +17,8 @@ This file was used for analysis and figure generation.
 Survival analyses, including Figures 3C and Supplemental Figure 5, can be found in `manuscript_survival_analysis.Rmd`
 
 ## Dependencies
-`liftover.py` requires the `pyliftover` library. You can build a conda environment with `envs/liftover.yaml`
-to run `liftover.py`
+`envs/` has the `.yaml` files to build Anaconda environments with the necessary dependencies.
+* Run `liftover.py` with `liftover.yaml`
+* `annotate-snps.smk` can be run in any environment with `snakemake`. `conda` needs to be installed to use `snakemake's` environment functionality. It's recommended to run the workflow using the `--singularity` option
+* Run the `R` scripts with `r-env.yaml`
+

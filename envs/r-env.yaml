@@ -1,0 +1,25 @@
+name: r-env
+channels:
+    - defaults
+    - bioconda
+    - conda-forge
+dependencies:
+    - r-gridExtra
+    - r-annotables
+    - r-reshape2
+    - r-stringr
+    - r-ggplot2
+    - r-readxl
+    - r-tibble
+    - r-cowplot
+    - r-survminer
+    - r-dplyr
+    - r-readr
+    - r-rms
+    - r-scales
+    - bioconductor-tximport 
+    - r-corrplot
+    - r-broom
+    - r-tidyr
+    - bioconductor-deseq2
+    - mscorefonts

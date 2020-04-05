@@ -11,9 +11,6 @@ library(dplyr)
 library(ggplot2)
 library(stringr)
 library(reshape2)
-# library(scales)
-# library(colorspace)
-# library(cowplot)
 
 
 get_region_extended <- function(position) {

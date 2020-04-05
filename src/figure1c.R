@@ -35,21 +35,6 @@ get_region_extended <- function(position) {
   } else {
     return("Fibrillar collagen NC1")
   }
-  # if (position >= 0 && position < 71) {
-  #   return("Pre-Laminin G-like")
-  # } else if (position >= 71 && position <= 243) {
-  #   return('Laminin G-like')
-  # } else if (position > 243 && position < 529) {
-  #   return("Pre-Triple Helical")
-  # } else if(position >= 529 && position <= 1542) {
-  #   return('Triple Helical Region')
-  # } else if (position > 1542 && position < 1577) {
-  #   return("Pre-Fibrillar")
-  # } else if (position >= 1577 && position <= 1805) {
-  #   return('Fibrillar collagen NC1')
-  # } else {
-  #   return("Post-Fibrillar collagen NC1")
-  # }
 }
 
 
@@ -69,17 +54,9 @@ snps$reference_aa <- extracted_aas[, 1]
 snps$variant_aa <- extracted_aas[, 2]
 snps$aa_position <- as.integer(extracted_pos)
 
-# snps$reference_aa <- sapply(snps$aachange, function(x) substr(x, 3,3))
-# snps$variant_aa <- sapply(snps$aachange, function(x) substr(x, nchar(x),nchar(x)))
-# snps$aa_position <- sapply(snps$aachange, function(x) str_extract(x, "([0-9]+)"))
-# snps$aa_position <- as.integer(snps$aa_position)
 snps$region <- sapply(snps$aa_position, get_region_extended)
 snps$pg.mutation <- ifelse(snps$reference_aa %in% c("P", "G") & !(snps$variant_aa %in% c("P", "G")), 1, 0)
 snps$other.mutation <- ifelse(snps$reference_aa %in% c("P", "G") & !(snps$variant_aa %in% c("P", "G")), 0, 1)
-
-# region.lengths <- c(71, 243 - 71, 529 - 244, 1542 - 529, 1576 - 1543, 1805 - 1577)
-# region.names <- c("Pre-Laminin G-like", "Laminin G-like", "Pre-Triple Helical", "Triple Helical Region",
-#                   "Pre-Fibrillar", "Fibrillar collagen NC1")
 
 region.lengths <- c(229, 419 - 230, 511-509, 528-512, 1542-529, 1563-1543, 1767-1564)
 region.names <- c("Pre-Nonhelical region", "Triple-helical region (interrupted)",

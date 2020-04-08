@@ -77,11 +77,8 @@ mutations <- mutations %>%
     )
   )
 
-# mutations <- mutations %>%
-#   mutate(helix_breaker = case_when(
-#     ref_aa %in% c("P", "G") & !(mutant_aa %in%c("P", "G")) ~ 1,
-#     TRUE ~ 0
-#   ))
+# Offset due to deletions in various positions in Isoforms B, C, and 4
+offset <- 38
 
 # Plot where mutations fall in the amino acid sequence
 p <- mutations %>%
@@ -93,11 +90,11 @@ p <- mutations %>%
   ggplot(aes(position)) +
   geom_histogram(aes(fill = factor(pg_mutation)), bins = 40) +
   facet_grid(rows = vars(pg_mutation)) +
-  geom_vline(xintercept = c(529-38, 1542-38), color = "red", linetype = "dashed") + #Note adjustment for Isoform C
+  geom_vline(xintercept = c(529-offset, 1542-offset), color = "red", linetype = "dashed") + #Note adjustment for Isoform C
   labs(x = "Amino Acid Position in COL11A1", y = "Number Of Mutations") +
   scale_x_continuous(breaks = c(0, 500, 1000, 1500, 1800)) +
   theme(legend.position = "none") +
-  annotate("rect", xmin=529-38, xmax=1542-38, ymin=0, ymax=Inf, alpha=0.2, fill="red")
+  annotate("rect", xmin=529-offset, xmax=1542-offset, ymin=0, ymax=Inf, alpha=0.2, fill="red")
 print(p)
 
 # Calculate number of SCCs with at least one helix breaking mutation
@@ -112,6 +109,8 @@ prop.samples <- mutations %>%
   summarise(prop.broken.helix = sum(mutated) / 100)
 print(prop.samples)
 
+print(paste("Total Number of COL11A1 AA Changing Mutations:", dim(mutations)[1]))
+print(paste("Number of AA Changing Mutations in Triple Helix Region:", sum(mutations$region == "Triple-helical region")))
 print(paste("Total Number of Proline/Glycine Mutations:", sum(mutations$pg_mutation)))
 print(paste("Proline/Glycine Mutations in Triple Helix Region:",
             sum(mutations[mutations$region == "Triple-helical region", ]$helix_breaking)))

@@ -9,6 +9,7 @@
 library(readr)
 library(dplyr)
 library(stringr)
+library(ggplot2)
 
 # Position indices derived from Uniprot
 get_region <- function(position, transcript) {
@@ -16,6 +17,12 @@ get_region <- function(position, transcript) {
   if (str_detect(transcript, "ENST00000353414")) {
     if (position > 260) {
       position = position + 38
+    }
+  }
+  # Correction for 115 AA deletion in Isoform 4
+  if (str_detect(transcript, "ENST00000512756")) {
+    if (position > 299) {
+      position = position + 115
     }
   }
   if (position >= 230 & position <= 419) {
@@ -108,4 +115,6 @@ print(prop.samples)
 print(paste("Total Number of Proline/Glycine Mutations:", sum(mutations$pg_mutation)))
 print(paste("Proline/Glycine Mutations in Triple Helix Region:",
             sum(mutations[mutations$region == "Triple-helical region", ]$helix_breaking)))
+print(paste("Proline/Glycine Mutations OUTSIDE of Triple Helix Region:",
+      sum(mutations[mutations$region != "Triple-helical region", ]$pg_mutation)))
   

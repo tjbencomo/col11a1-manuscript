@@ -40,7 +40,6 @@ rule maf2maf:
             --vep-path $vep_path --ncbi-build GRCh38 \
             --tmp-dir  {params.tmp_dir} \
             --filter-vcf 0 \
-            --custom-enst overriden-ensts \
             --cache-version 99
         """
 

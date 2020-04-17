@@ -78,7 +78,8 @@ mutations <- mutations %>%
   )
 
 # Offset due to deletions in various positions in Isoforms B, C, and 4
-offset <- 38
+# Isoform A doesn't have any deletions
+offset <- 0
 
 # Plot where mutations fall in the amino acid sequence
 p <- mutations %>%

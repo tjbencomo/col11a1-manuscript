@@ -64,4 +64,4 @@ variants <- lee %>%
   select(-rowid, -ensgene, -entrez, -chr, -start, -end, 
          -strand, -biotype, -description)
 
-write_delim(variants, "data/mutations.maf", delim = "\t")
+write_delim(variants, "data/mutations.maf.gz", delim = "\t")

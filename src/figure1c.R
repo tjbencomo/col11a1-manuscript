@@ -1,10 +1,6 @@
 # File: figure1c.R
 # Author: Tomas Bencomo
-# Description: Script generates Figure 1C. This script creates
-# a heatmap for COL11A1 Protein Isoform C. Isoform C differs from Isoform A by a deletion
-# from AA 261 - 299. While this deletion affects a nonhelical region,
-# the indexing for the other AAs in the protein are shifted leftward by 38 AAs
-# after the 260th AA position. get_region_extended() accounts for this shift.
+# Description: Script generates Figure 1C.
 
 library(readr)
 library(dplyr)
@@ -14,12 +10,11 @@ library(reshape2)
 
 
 get_region_extended <- function(position) {
-  if (position > 260) {
-    position = position + 38
-  }
   if (position < 230) {
     return("Pre-Nonhelical region")
   } else if (position >= 230 && position <= 419) {
+    return("Nonhelical region")
+  } else if (position >= 420 && position <= 508) {
     return("Triple-helical region (interrupted)")
   } else if (position >= 509 && position <= 511) {
     return("Short nonhelical segment")
@@ -55,10 +50,12 @@ snps$region <- sapply(snps$aa_position, get_region_extended)
 snps$pg.mutation <- ifelse(snps$reference_aa %in% c("P", "G") & !(snps$variant_aa %in% c("P", "G")), 1, 0)
 snps$other.mutation <- ifelse(snps$reference_aa %in% c("P", "G") & !(snps$variant_aa %in% c("P", "G")), 0, 1)
 
-region.lengths <- c(229, 419 - 230, 511-509, 528-512, 1542-529, 1563-1543, 1767-1564)
-region.names <- c("Pre-Nonhelical region", "Triple-helical region (interrupted)",
+
+region.lengths <- c(229, 419-230, 508-420, 511-509, 528-512, 1542-529, 1563-1543, 1806-1564)
+region.names <- c("Pre-Nonhelical region", "Nonhelical region", "Triple-helical region (interrupted)",
                   "Short nonhelical segment", "Telopeptide", "Triple-helical region",
                   "Nonhelical region (C-terminal)", "Fibrillar collagen NC1")
+
 
 snps$region <- factor(snps$region, levels = region.names)
 

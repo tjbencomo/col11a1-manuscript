@@ -1,0 +1,2 @@
+Chromosome	Start_Position	Reference_Allele	Tumor_Seq_Allele2	gene	t_ref_count	t_alt_count	n_ref_count	n_alt_count	patient	t_depth	n_depth	Tumor_Sample_Barcode	Matched_Norm_Sample_Barcode
+chr19	NA	C	T	FCGBP	47	11	38	0	cSCC6	58	38	cSCC6-T	cSCC6-N

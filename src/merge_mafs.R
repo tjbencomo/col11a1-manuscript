@@ -2,7 +2,7 @@
 # Author: Tomas Bencomo
 # Description: Merge variants from the three different cohorts: 
 # Durinck, Pickering, and Lee. Note Lee includes the South patients.
-# The final, combined mutational callset is mutations.csv
+# The final, combined mutational callset is mutations.maf.gz
 
 library(readr)
 library(dplyr)

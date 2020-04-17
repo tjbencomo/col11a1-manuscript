@@ -5,8 +5,7 @@
 # lifted over to hg38 coordinate space with liftover.py. MAF
 # formatted files are then extracted with convert_to_maf.R. 
 # MAFs are then re-annotated with maf2maf using VEP and selecting
-# variant effects for the default Ensembl transcript except for
-# COL11A1, which uses a custom transcript specified in override-ensts.
+# variant effects for the default Ensembl transcript.
 # Some variants do not match the reference allele and have been excluded
 # from analysis. These can be found in the excluded-variants folder
 

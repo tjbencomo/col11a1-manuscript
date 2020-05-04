@@ -51,7 +51,7 @@ snps$pg.mutation <- ifelse(snps$reference_aa %in% c("P", "G") & !(snps$variant_a
 snps$other.mutation <- ifelse(snps$reference_aa %in% c("P", "G") & !(snps$variant_aa %in% c("P", "G")), 0, 1)
 
 
-region.lengths <- c(229, 419-230, 508-420, 511-509, 528-512, 1542-529, 1563-1543, 1806-1564)
+region.lengths <- c(229, 190, 89, 3, 17, 1014, 21, 1806-1563)
 region.names <- c("Pre-Nonhelical region", "Nonhelical region", "Triple-helical region (interrupted)",
                   "Short nonhelical segment", "Telopeptide", "Triple-helical region",
                   "Nonhelical region (C-terminal)", "Fibrillar collagen NC1")

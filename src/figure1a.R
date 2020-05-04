@@ -41,7 +41,8 @@ mutations <- read_delim("data/mutations.maf.gz",
 
 cohort_order <- c("This study", "South et. al", "Durinck et. al", 
                   "Pickering et. al", "No Mutation")
-colors <- c("#64B5B4", "#DC96B3", "#545788", "#8F6C9B", "#FFFFFF")
+# colors <- c("#64B5B4", "#DC96B3", "#545788", "#8F6C9B", "#FFFFFF")
+colors <- c("#97C6AC", "#E3ABB7", "#F4D5A4", "#A4ABC6", "#FFFFFF")
 
 # Compute proportion of SCCs with an "important" mutation
 mutated_ratios <- mutations %>%

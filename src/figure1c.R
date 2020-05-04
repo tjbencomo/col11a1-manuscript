@@ -16,6 +16,7 @@ get_region_extended <- function(position) {
     return("Nonhelical region")
   } else if (position >= 420 && position <= 508) {
     return("Triple-helical region (interrupted)")
+    # return("Triple-helical region")
   } else if (position >= 509 && position <= 511) {
     return("Short nonhelical segment")
   } else if (position >= 512 && position <= 528) {
@@ -51,7 +52,12 @@ snps$pg.mutation <- ifelse(snps$reference_aa %in% c("P", "G") & !(snps$variant_a
 snps$other.mutation <- ifelse(snps$reference_aa %in% c("P", "G") & !(snps$variant_aa %in% c("P", "G")), 0, 1)
 
 
-region.lengths <- c(229, 190, 89, 3, 17, 1014, 21, 1806-1563)
+# Note: The triple-helical region's mutation rate is also
+# used for the interrupted triple helical region's rate as they
+# are both composed of the same domain motif. The triple helical region's
+# length takes into account the 89 AAs from the interrupted triple helical region
+# to account for this.
+region.lengths <- c(229, 190, 89, 3, 17, 1014 + 89, 21, 1806-1563)
 region.names <- c("Pre-Nonhelical region", "Nonhelical region", "Triple-helical region (interrupted)",
                   "Short nonhelical segment", "Telopeptide", "Triple-helical region",
                   "Nonhelical region (C-terminal)", "Fibrillar collagen NC1")
@@ -67,6 +73,16 @@ counts <- snps %>%
   count(region, .drop = F) %>% 
   inner_join(region.info) %>%
   mutate(normalized.count = n / lengths)
+
+# Count interrupted triple-helical region as triple helical region 
+triple.helical.rate <- counts %>% 
+  filter(region == "Triple-helical region") %>% 
+  pull(normalized.count)
+counts <- counts %>%
+  mutate(normalized.count = case_when(
+    str_detect(region, "Triple-helical") ~ triple.helical.rate,
+    TRUE ~ normalized.count
+  ))
 
 melted <- melt(select(counts, region, normalized.count), id.var = "region")
 

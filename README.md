@@ -8,7 +8,7 @@ Use `r-env.yaml` to run any of the `.R` scripts. `liftover.yaml` should be used 
 recommended to use the `--use-conda` and `--use-singularity` options, which require `conda` and `singularity`. 
 
 ## Reproducing Mutation Callset
-Follow these steps to reproduce the mutation callset included with the paper 
+Follow these steps to reproduce the full mutation callset included with the paper 
 (referred to as `mutations.maf.gz` in this repository). 
 ### 1. Generate mutation callset from Lee lab samples
 Mutations were called for samples processed by the Lee lab (53 SCCs in total) using an in-house
@@ -21,10 +21,11 @@ Previously published callsets from Pickering (39 SCCs) and Durinck (8 SCCs) were
 hg38 coordinates (Pickering was originally in h19 and Durinck hg18) and then reannotated using
 Ensembl VEP. 
 
-1. Run `src/liftover.py` to convert the original callsets from the Pickering and Durinck papers
-2. Run `src/convert_to_maf.R` to convert hg38 callsets into MAF format
-3. Run `src/annotate-snps.smk` to reannotate the MAFs using `maf2maf`. Note this is a `snakemake` pipeline.
-4. Run `src/merge_mafs.R` to combine the Lee, Pickering, and Durinck MAFs into `mutations.maf.gz`.
+1. Download the callsets from their respective PubMed links.
+2. Run `src/liftover.py` to convert the original callsets from the Pickering and Durinck papers
+3. Run `src/convert_to_maf.R` to convert hg38 callsets into MAF format
+4. Run `src/annotate-snps.smk` to reannotate the MAFs using `maf2maf`. Note this is a `snakemake` pipeline.
+5. Run `src/merge_mafs.R` to combine the Lee, Pickering, and Durinck MAFs into `mutations.maf.gz`.
 
 ## Figures
 The `src/` folder contains scripts to reproduce the figures. Survival analyses, including Figures 3C 

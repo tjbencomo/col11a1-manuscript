@@ -1,30 +1,38 @@
 # col11a1-manuscript
 Code for "Increased neoplastic invasion by non-cell autonomous mutant collagen COL11A1" by Lee et. al. 2020
 
+## Analyses and Figures
+The `src/` folder contains scripts to reproduce  analyses and figures. 
+Most filenames correspond to their associated figure. Survival analyses, including Figures 3C 
+and Supplemental Figure 5, can be found in `manuscript_survival_analysis.Rmd`. 
+These scripts can be run using the `r-env` environment (see below about environments).
+
 ## Dependencies
 `envs/` has several `.yaml` files that create `conda` environments with the necessary dependencies to run code.
-Use `r-env.yaml` to run any of the `.R` scripts. `liftover.yaml` should be used to execute `liftover.py`.
-`annotate-snps.smk` is a `snakemake` pipeline. Any python environment with `snakemake` can run the pipeline. It's
-recommended to use the `--use-conda` and `--use-singularity` options, which require `conda` and `singularity`. 
+If you only wish to recreate figures and analyses, creating the `r-env` environment is sufficent.
+If you wish to recreate the full mutation callset from scratch, you will also need to create `col11a1-env`.
 ### Environments
 Before beginning, install Anaconda or Miniconda.
 
-
 Create the following environments
 ```
-# col11a1-env
-conda env create -f envs/liftover.yaml
-
-# r-env
+# r-env - used to run scripts that create figures and reproduce analysis
 conda env create -f envs/r-env.yaml
+
+# col11a1-env - used to generate full mutation callset from scratch
+# only needs to be created if you wish to recreate callset from scratch
+conda env create -f envs/liftover.yaml
 ```
 
-Additionally install `snakemake` a `conda` environment of your choice to run `src/annotate-snps.smk`
+Additionally install `snakemake` a `conda` environment of your choice to run `src/annotate-snps.smk`.
+This is only needed if if you wish to recreate the callset from scratch
 ```
 conda install snakemake
 ```
 
 ### Datasets
+These datasets are only required to regenerate the full mutation callset from scratch.
+
 1. Download the hg38 reference FASTA from the Broad's 
 [GATK Resource Bundle](https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle). 
 Install `Homo_sapiens_assembly38.fasta` and `Homo_sapiens_assembly38.fasta.fai`.Save the files to `data/refs`
@@ -80,9 +88,3 @@ snakemake -s src/annotate-snps.smk --use-conda
 conda activate r-env
 Rscript src/merge_mafs.R
 ```
-
-## Figures
-The `src/` folder contains scripts to reproduce the figures. 
-Most filenames correspond to their associated figure. Survival analyses, including Figures 3C 
-and Supplemental Figure 5, can be found in `manuscript_survival_analysis.Rmd`. 
-These scripts can be run using the `r-env` environment.

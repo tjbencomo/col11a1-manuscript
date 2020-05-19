@@ -27,14 +27,14 @@ reorganize_dataframe <- function(df) {
 
 # Loads TCGA data from given directory and extracts relevant 
 # clinical/transcriptomic data
-load_data <- function(tcga_dir, loca_data_dir, cancer) {
+load_data <- function(tcga_dir, local_data_dir, cancer) {
   clinical <- read_delim(file.path(tcga_dir, 
                                    paste(cancer_type, "_clinicalMatrix", sep="")), 
                          "\t", escape_double = FALSE, trim_ws = TRUE)
   expr_data <- read_delim(file.path(tcga_dir, "HiSeqV2"), "\t", 
                            escape_double = FALSE, trim_ws = TRUE) %>%
     column_to_rownames(var = "sample")
-  interested.genes <- read_excel(file.path(loca_data_dir, "survival_genes.xlsx"), 
+  interested.genes <- read_excel(file.path(local_data_dir, "survival_genes.xlsx"), 
                                  sheet = "Up") %>% pull(f)
   expr_data <- reorganize_dataframe(expr_data)
   

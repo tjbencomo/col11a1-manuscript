@@ -7,3 +7,4 @@ dependencies:
     - pyliftover
     - numpy
     - pandas
+    - xlrd

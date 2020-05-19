@@ -72,7 +72,7 @@ Rscript src/convert_to_maf.R
 # Assumes snakemake is installed
 # If not run `conda install snakemake` to install
 # If singularity is available, it is recommended to use --use-singularity
-snakemake --use-conda -s src/annotate-snps.smk
+snakemake -s src/annotate-snps.smk --use-conda
 ```
 5. Run `src/merge_mafs.R` to combine the Lee, Pickering, and Durinck MAFs into `mutations.maf.gz`.
 ```

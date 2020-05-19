@@ -12,14 +12,16 @@ Before beginning, install Anaconda or Miniconda.
 
 Create the following environments
 ```
-# col11a1-env
-conda env create -f envs/liftover.yaml
-
-# r-env
+# r-env - used to run scripts that create figures and reproduce analysis
 conda env create -f envs/r-env.yaml
+
+# col11a1-env - used to generate full mutation callset from scratch
+# only needs to be installed if you wish to recreate callset from scratch
+conda env create -f envs/liftover.yaml
 ```
 
-Additionally install `snakemake` a `conda` environment of your choice to run `src/annotate-snps.smk`
+Additionally install `snakemake` a `conda` environment of your choice to run `src/annotate-snps.smk`.
+This is only needed if if you wish to recreate callset from scratch
 ```
 conda install snakemake
 ```

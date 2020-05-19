@@ -54,8 +54,8 @@ created by the pipeline is referred to as `lee.maf` in this repository. Reads we
 See the pipeline repository for full details. 
 
 The fully annotated mutations for the 53 SCCs we processed are also available to download from our manuscript
-on the journal's website. Download the supplementary file and rename it `lee.maf` if you'd prefer
-to skip the pipeline. 
+on the journal's website. Download the supplementary file, decompress with `gunzip`, and rename it `lee.maf` 
+if you'd prefer to skip the pipeline. 
 
 ### 2. Reannotate Pickering and Cho mutations
 Previously published callsets from [Pickering](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4367811/) (39 SCCs) and [Durinck](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3187561/)

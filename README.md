@@ -31,6 +31,7 @@ Install `Homo_sapiens_assembly38.fasta` and `Homo_sapiens_assembly38.fasta.fai`.
 
 2. Install VEP Cache files by following 
 [this](https://uswest.ensembl.org/info/docs/tools/vep/script/vep_cache.html#cache) tutorial. 
+Download cache data for version 99.
 Save the files to `data/vep_data`
 
 
@@ -72,7 +73,7 @@ Rscript src/convert_to_maf.R
 # Assumes snakemake is installed
 # If not run `conda install snakemake` to install
 # If singularity is available, it is recommended to use --use-singularity
-snakemake --use-conda -s src/annotate-snps.smk
+snakemake -s src/annotate-snps.smk --use-conda
 ```
 5. Run `src/merge_mafs.R` to combine the Lee, Pickering, and Durinck MAFs into `mutations.maf.gz`.
 ```

@@ -16,7 +16,7 @@ from pyliftover import LiftOver
 import pandas as pd
 
 def concat_cho_data():
-    filepath = os.path.join('../data/original-callsets', 'NIHMS323235-supplement-6.xls')
+    filepath = os.path.join('data/original-callsets', 'NIHMS323235-supplement-6.xls')
     sheets = pd.read_excel(filepath, sheet_name = None)
     mutation_tables = []
     for sheet in sheets:
@@ -39,7 +39,7 @@ def liftover_cho(df):
     return df
 
 def load_pickering():
-    filepath = os.path.join('../data/original-callsets', 'NIHMS635298-supplement-3_39WES.xlsx')
+    filepath = os.path.join('data/original-callsets', 'NIHMS635298-supplement-3.xlsx')
     df = pd.read_excel(filepath, header = 2)
     return df
 
@@ -78,8 +78,8 @@ def main():
     pickering = liftover_pickering(pickering)
 
     print("Saving updated files...")
-    cho.to_csv('../data/durinck_mutations_hg38.csv', index=False, header=True)
-    pickering.to_csv('../data/pickering_mutations_hg38.csv', index=False, header=True) 
+    cho.to_csv('data/durinck_mutations_hg38.csv', index=False, header=True)
+    pickering.to_csv('data/pickering_mutations_hg38.csv', index=False, header=True) 
 
 if __name__ == '__main__':
     main()

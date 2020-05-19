@@ -11,23 +11,26 @@
 
 singularity: "docker://continuumio/miniconda3"
 
-ref_fasta = '/home/groups/carilee/refs/hg38/Homo_sapiens_assembly38.fasta'
-vep_dir = '/home/groups/carilee/refs/vep_data'
+ref_fasta = 'data/refs/Homo_sapiens_assembly38.fasta'
+vep_dir = 'data/vep_data'
 datasets = ['durinck', 'pickering']
+
+wildcard_constraints:
+    dataset="|".join(datasets)
 
 rule targets:
     input:
-        expand("mafs/{dataset}.maf", dataset=datasets),
+        expand("data/{dataset}.maf", dataset=datasets),
 
 rule maf2maf:
     input:
-        maf="mafs/{dataset}.unannotated.maf",
+        maf="data/{dataset}.unannotated.maf",
         fasta=ref_fasta,
         vep_dir=vep_dir
     output:
-        "mafs/{dataset}.maf"
+        "data/{dataset}.maf"
     params:
-        tmp_dir=os.path.join("{dataset}-tmp")
+        tmp_dir=os.path.join("data/{dataset}-tmp")
     conda:
         "../envs/annotation.yml"
     shell:

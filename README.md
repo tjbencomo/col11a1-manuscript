@@ -1,5 +1,5 @@
 # col11a1-manuscript
-Code to reproduce analysis and figures for "Increased neoplastic invasion by non-cell autonomous mutant collagen COL11A1" by Lee et. al 2020
+Code for "Increased neoplastic invasion by non-cell autonomous mutant collagen COL11A1" by Lee et. al 2020
 
 ## Dependencies
 `envs/` has several `.yaml` files that create `conda` environments with the necessary dependencies to run code.

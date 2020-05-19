@@ -16,7 +16,7 @@ from pyliftover import LiftOver
 import pandas as pd
 
 def concat_cho_data():
-    filepath = os.path.join('../data/original-callsets', 'stab_1_8WES.xls')
+    filepath = os.path.join('../data/original-callsets', 'NIHMS323235-supplement-6.xls')
     sheets = pd.read_excel(filepath, sheet_name = None)
     mutation_tables = []
     for sheet in sheets:

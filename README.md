@@ -31,6 +31,7 @@ Install `Homo_sapiens_assembly38.fasta` and `Homo_sapiens_assembly38.fasta.fai`.
 
 2. Install VEP Cache files by following 
 [this](https://uswest.ensembl.org/info/docs/tools/vep/script/vep_cache.html#cache) tutorial. 
+Download cache data for version 99.
 Save the files to `data/vep_data`
 
 

@@ -7,14 +7,18 @@ Use `r-env.yaml` to run any of the `.R` scripts. `liftover.yaml` should be used 
 `annotate-snps.smk` is a `snakemake` pipeline. Any python environment with `snakemake` can run the pipeline. It's
 recommended to use the `--use-conda` and `--use-singularity` options, which require `conda` and `singularity`. 
 
-## Reproducing Mutation Callset
-Follow these steps to reproduce the full mutation callset included with the paper 
+## Generating the Full Mutation Callset
+Follow these steps to reproduce the full mutation callset used for analysis in the paper 
 (referred to as `mutations.maf.gz` in this repository). 
 ### 1. Generate mutation callset from Lee lab samples
 Mutations were called for samples processed by the Lee lab (53 SCCs in total) using an in-house
 variant calling [pipeline](https://github.com/tjbencomo/col11a1-wes-pipeline). The final MAF file
 created by the pipeline is referred to as `lee.maf` in this repository. Reads were aligned to hg38.
-See the pipeline repository for full details.
+See the pipeline repository for full details. 
+
+The fully annotated mutations for the 53 SCCs we processed are also available to download from our manuscript
+on the journal's website. Download the supplementary file and rename it `lee.maf` if you'd prefer
+to skip running the pipeline. 
 
 ### 2. Reannotate Pickering and Cho mutations
 Previously published callsets from Pickering (39 SCCs) and Durinck (8 SCCs) were converted to

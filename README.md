@@ -6,6 +6,33 @@ Code for "Increased neoplastic invasion by non-cell autonomous mutant collagen C
 Use `r-env.yaml` to run any of the `.R` scripts. `liftover.yaml` should be used to execute `liftover.py`.
 `annotate-snps.smk` is a `snakemake` pipeline. Any python environment with `snakemake` can run the pipeline. It's
 recommended to use the `--use-conda` and `--use-singularity` options, which require `conda` and `singularity`. 
+### Environments
+Before beginning, install Anaconda or Miniconda.
+
+
+Create the following environments
+```
+# col11a1-env
+conda env create -f envs/liftover.yaml
+
+# r-env
+conda env create -f envs/r-env.yaml
+```
+
+Additionally install `snakemake` a `conda` environment of your choice to run `src/annotate-snps.smk`
+```
+conda install snakemake
+```
+
+### Datasets
+1. Download the hg38 reference FASTA from the Broad's 
+[GATK Resource Bundle](https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle). 
+Install `Homo_sapiens_assembly38.fasta` and `Homo_sapiens_assembly38.fasta.fai`.Save the files to `data/refs`
+
+2. Install VEP Cache files by following 
+[this](https://uswest.ensembl.org/info/docs/tools/vep/script/vep_cache.html#cache) tutorial. 
+Save the files to `data/vep_data`
+
 
 ## Generating the Full Mutation Callset
 Follow these steps to reproduce the full mutation callset used for analysis in the paper 
@@ -31,11 +58,30 @@ Ensembl VEP.
 2. Inside the `data` directory, create a subdirectory `original-callsets`
 3. Place the Pickering, Durinck, and Lee callsets into `data/original-callsets`
 2. Run `src/liftover.py` to convert the original callsets from the Pickering and Durinck papers
+```
+conda activate col11a1-env
+python src/liftover.py
+```
 3. Run `src/convert_to_maf.R` to convert hg38 callsets into MAF format
+```
+conda activate r-env
+Rscript src/convert_to_maf.R
+```
 4. Run `src/annotate-snps.smk` to reannotate the MAFs using `maf2maf`. Note this is a `snakemake` pipeline.
+```
+# Assumes snakemake is installed
+# If not run `conda install snakemake` to install
+# If singularity is available, it is recommended to use --use-singularity
+snakemake --use-conda -s src/annotate-snps.smk
+```
 5. Run `src/merge_mafs.R` to combine the Lee, Pickering, and Durinck MAFs into `mutations.maf.gz`.
+```
+conda activate r-env
+Rscript src/merge_mafs.R
+```
 
 ## Figures
 The `src/` folder contains scripts to reproduce the figures. 
 Most filenames correspond to their associated figure. Survival analyses, including Figures 3C 
-and Supplemental Figure 5, can be found in `manuscript_survival_analysis.Rmd`.
+and Supplemental Figure 5, can be found in `manuscript_survival_analysis.Rmd`. 
+These scripts can be run using the `r-env` environment.

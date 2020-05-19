@@ -65,7 +65,7 @@ Ensembl VEP.
 
 1. Download the callsets from their respective PubMed links
 2. Inside the `data` directory, create a subdirectory `original-callsets`
-3. Place the Pickering, Durinck, and Lee callsets into `data/original-callsets`
+3. Place the Pickering and Durinck callsets into `data/original-callsets`. Leave `lee.maf` in `data/`.
 2. Run `src/liftover.py` to convert the original callsets from the Pickering and Durinck papers
 ```
 conda activate col11a1-env

@@ -76,7 +76,7 @@ python src/liftover.py
 conda activate r-env
 Rscript src/convert_to_maf.R
 ```
-4. Run `src/annotate-snps.smk` to reannotate the MAFs using `maf2maf`. Note this is a `snakemake` pipeline.
+4. Run `src/annotate-snps.smk` to reannotate the MAFs using `maf2maf`.
 ```
 # Assumes snakemake is installed
 # If not run `conda install snakemake` to install

@@ -29,7 +29,7 @@ rule maf2maf:
     params:
         tmp_dir=os.path.join("{dataset}-tmp")
     conda:
-        "envs/annotation.yml"
+        "../envs/annotation.yml"
     shell:
         """
         mkdir {params.tmp_dir}

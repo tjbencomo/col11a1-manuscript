@@ -29,7 +29,7 @@ hg38 coordinates (Pickering was originally in h19 and Durinck hg18) and then rea
 Ensembl VEP. 
 
 1. Download the callsets from their respective PubMed links
-2. Inside this directory, create a directories `data` and `data/original-callsets`
+2. Inside the `data` directory, create a subdirectory `/original-callsets`
 3. Place the Pickering and Durinck and Lee callsets into `data/original-callsets`
 2. Run `src/liftover.py` to convert the original callsets from the Pickering and Durinck papers
 3. Run `src/convert_to_maf.R` to convert hg38 callsets into MAF format

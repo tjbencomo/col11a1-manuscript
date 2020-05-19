@@ -24,7 +24,7 @@ to skip the pipeline.
 ### 2. Reannotate Pickering and Cho mutations
 Previously published callsets from [Pickering](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4367811/) (39 SCCs) and [Durinck](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3187561/)
 (8 SCCs) were converted to
-hg38 coordinates (Pickering was originally in h19 and Durinck hg18) and then reannotated using
+hg38 coordinates (Pickering was originally in hg19 and Durinck hg18) and then reannotated using
 Ensembl VEP. 
 
 1. Download the callsets from their respective PubMed links

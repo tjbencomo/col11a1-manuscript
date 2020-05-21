@@ -2,7 +2,8 @@
 Code for "Increased neoplastic invasion by non-cell autonomous mutant collagen COL11A1" by Lee et. al. 2020
 
 ## Data
-Mutation data for all 100 SCCs can be downloaded [here](https://drive.google.com/drive/folders/18HBfLd9vzNsC02caiXsDaw7GHDo7VOcx?usp=sharing).
+Mutation data for all 100 SCCs can be downloaded [here](https://drive.google.com/drive/folders/18HBfLd9vzNsC02caiXsDaw7GHDo7VOcx?usp=sharing). 
+Save the file to `/data` to ensure scripts run properly without any modification.
 The mutations are stored in a gzip compressed MAF formatted file. Any code that refers to `mutations.maf.gz`
 is referencing this file. See below for details on how this file was generated.
 

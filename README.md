@@ -29,7 +29,7 @@ conda env create -f envs/r-env.yaml
 conda env create -f envs/liftover.yaml
 ```
 
-Additionally install `snakemake` a `conda` environment of your choice to run `src/annotate-snps.smk`.
+Additionally install `snakemake` in any `conda` environment to run `src/annotate-snps.smk`.
 This is only needed if if you wish to recreate the callset from scratch
 ```
 conda install snakemake

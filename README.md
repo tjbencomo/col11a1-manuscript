@@ -1,6 +1,11 @@
 # col11a1-manuscript
 Code for "Increased neoplastic invasion by non-cell autonomous mutant collagen COL11A1" by Lee et. al. 2020
 
+## Data
+Mutation data for all 100 SCCs can be downloaded [here](https://drive.google.com/drive/folders/18HBfLd9vzNsC02caiXsDaw7GHDo7VOcx?usp=sharing).
+The mutations are stored in a gzip compressed MAF formatted file. Any code that refers to `mutations.maf.gz`
+is referencing this file. See below for details on how this file was generated.
+
 ## Analyses and Figures
 The `src/` folder contains scripts to reproduce  analyses and figures. 
 Most filenames correspond to their associated figure. Survival analyses, including Figures 3C 
@@ -44,18 +49,13 @@ Save the files to `data/vep_data`
 
 
 ## Generating the Full Mutation Callset
-Follow these steps to reproduce the full mutation callset used for analysis in the paper 
-(referred to as `mutations.maf.gz` in this repository).
+Follow these steps to reproduce the complete mutation callset (`mutations.maf.gz`) referenced in the manuscript. 
 
 ### 1. Generate mutation callset from Lee lab samples
 Mutations were called for samples processed by the Lee lab (53 SCCs in total) using an in-house
 variant calling [pipeline](https://github.com/tjbencomo/col11a1-wes-pipeline). The final MAF file
 created by the pipeline is referred to as `lee.maf` in this repository. Reads were aligned to hg38.
-See the pipeline repository for full details. 
-
-The fully annotated mutations for the 53 SCCs we processed are also available to download from our manuscript
-on the journal's website. Download the supplementary file, decompress with `gunzip`, and rename it `lee.maf` 
-if you'd prefer to skip the pipeline. 
+See the pipeline repository for details on how to generate `lee.maf`. 
 
 ### 2. Reannotate Pickering and Cho mutations
 Previously published callsets from [Pickering](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4367811/) (39 SCCs) and [Durinck](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3187561/)

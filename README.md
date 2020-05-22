@@ -16,7 +16,7 @@ These scripts can be run using the `r-env` environment (see below about environm
 ## Dependencies
 `envs/` has several `.yaml` files that create `conda` environments with the necessary dependencies to run code.
 If you only wish to recreate figures and analyses, creating the `r-env` environment is sufficent.
-If you wish to recreate the full mutation callset from scratch, you will also need to create `col11a1-env`.
+If you wish to generate `mutations.maf.gz` from scratch, you will also need to create `col11a1-env`.
 ### Environments
 Before beginning, install Anaconda or Miniconda.
 
@@ -37,7 +37,7 @@ conda install snakemake
 ```
 
 ### Datasets
-These datasets are only required to regenerate the full mutation callset from scratch.
+These datasets are only required to regenerate `mutations.maf.gz` from scratch.
 
 1. Download the hg38 reference FASTA from the Broad's 
 [GATK Resource Bundle](https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle). 
@@ -49,8 +49,8 @@ Download cache data for version 99.
 Save the files to `data/vep_data`
 
 
-## Generating the Full Mutation Callset
-Follow these steps to reproduce the complete mutation callset (`mutations.maf.gz`) referenced in the manuscript. 
+## Generating `mutations.maf.gz`
+Follow these steps to reproduce the complete mutation callset used in the manuscript. 
 
 ### 1. Generate mutation callset from Lee lab samples
 Mutations were called for samples processed by the Lee lab (53 SCCs in total) using an in-house

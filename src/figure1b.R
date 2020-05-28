@@ -50,4 +50,3 @@ p <- mutations %>%
   scale_fill_manual(values = colors)
 
 print(p) 
-  

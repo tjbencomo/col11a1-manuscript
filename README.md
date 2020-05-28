@@ -1,30 +1,44 @@
 # col11a1-manuscript
 Code for "Increased neoplastic invasion by non-cell autonomous mutant collagen COL11A1" by Lee et. al. 2020
 
+## Data
+Mutation data for all 100 SCCs can be downloaded [here](https://drive.google.com/drive/folders/18HBfLd9vzNsC02caiXsDaw7GHDo7VOcx?usp=sharing). 
+Save the file to `/data` to ensure scripts run properly without any modification.
+The mutations are stored in a gzip compressed MAF formatted file. Any code that refers to `mutations.maf.gz`
+is referencing this file. See below for details on how this file was generated.
+
+## Analyses and Figures
+The `src/` folder contains scripts to reproduce  analyses and figures. 
+Most filenames correspond to their associated figure. Survival analyses, including Figures 3C 
+and Supplemental Figure 5, can be found in `manuscript_survival_analysis.Rmd`. 
+These scripts can be run using the `r-env` environment (see below about environments).
+
 ## Dependencies
 `envs/` has several `.yaml` files that create `conda` environments with the necessary dependencies to run code.
-Use `r-env.yaml` to run any of the `.R` scripts. `liftover.yaml` should be used to execute `liftover.py`.
-`annotate-snps.smk` is a `snakemake` pipeline. Any python environment with `snakemake` can run the pipeline. It's
-recommended to use the `--use-conda` and `--use-singularity` options, which require `conda` and `singularity`. 
+If you only wish to recreate figures and analyses, creating the `r-env` environment is sufficent.
+If you wish to generate `mutations.maf.gz` from scratch, you will also need to create `col11a1-env`.
 ### Environments
 Before beginning, install Anaconda or Miniconda.
 
-
 Create the following environments
 ```
-# col11a1-env
-conda env create -f envs/liftover.yaml
-
-# r-env
+# r-env - used to run scripts that create figures and reproduce analysis
 conda env create -f envs/r-env.yaml
+
+# col11a1-env - used to generate full mutation callset from scratch
+# only needs to be created if you wish to recreate callset from scratch
+conda env create -f envs/liftover.yaml
 ```
 
-Additionally install `snakemake` a `conda` environment of your choice to run `src/annotate-snps.smk`
+Additionally install `snakemake` in any `conda` environment to run `src/annotate-snps.smk`.
+This is only needed if if you wish to recreate the callset from scratch
 ```
 conda install snakemake
 ```
 
 ### Datasets
+These datasets are only required to regenerate `mutations.maf.gz` from scratch.
+
 1. Download the hg38 reference FASTA from the Broad's 
 [GATK Resource Bundle](https://gatk.broadinstitute.org/hc/en-us/articles/360035890811-Resource-bundle). 
 Install `Homo_sapiens_assembly38.fasta` and `Homo_sapiens_assembly38.fasta.fai`.Save the files to `data/refs`
@@ -35,19 +49,14 @@ Download cache data for version 99.
 Save the files to `data/vep_data`
 
 
-## Generating the Full Mutation Callset
-Follow these steps to reproduce the full mutation callset used for analysis in the paper 
-(referred to as `mutations.maf.gz` in this repository).
+## Generating `mutations.maf.gz`
+Follow these steps to reproduce the complete mutation callset used in the manuscript. 
 
 ### 1. Generate mutation callset from Lee lab samples
 Mutations were called for samples processed by the Lee lab (53 SCCs in total) using an in-house
 variant calling [pipeline](https://github.com/tjbencomo/col11a1-wes-pipeline). The final MAF file
 created by the pipeline is referred to as `lee.maf` in this repository. Reads were aligned to hg38.
-See the pipeline repository for full details. 
-
-The fully annotated mutations for the 53 SCCs we processed are also available to download from our manuscript
-on the journal's website. Download the supplementary file and rename it `lee.maf` if you'd prefer
-to skip the pipeline. 
+See the pipeline repository for details on how to generate `lee.maf`. 
 
 ### 2. Reannotate Pickering and Cho mutations
 Previously published callsets from [Pickering](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4367811/) (39 SCCs) and [Durinck](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3187561/)
@@ -57,7 +66,7 @@ Ensembl VEP.
 
 1. Download the callsets from their respective PubMed links
 2. Inside the `data` directory, create a subdirectory `original-callsets`
-3. Place the Pickering, Durinck, and Lee callsets into `data/original-callsets`
+3. Place the Pickering and Durinck callsets into `data/original-callsets`. Leave `lee.maf` in `data/`.
 2. Run `src/liftover.py` to convert the original callsets from the Pickering and Durinck papers
 ```
 conda activate col11a1-env
@@ -68,11 +77,11 @@ python src/liftover.py
 conda activate r-env
 Rscript src/convert_to_maf.R
 ```
-4. Run `src/annotate-snps.smk` to reannotate the MAFs using `maf2maf`. Note this is a `snakemake` pipeline.
+4. Run `src/annotate-snps.smk` to reannotate the MAFs using `maf2maf`.
 ```
 # Assumes snakemake is installed
 # If not run `conda install snakemake` to install
-# If singularity is available, it is recommended to use --use-singularity
+# If singularity is available, it is recommended to include --use-singularity
 snakemake -s src/annotate-snps.smk --use-conda
 ```
 5. Run `src/merge_mafs.R` to combine the Lee, Pickering, and Durinck MAFs into `mutations.maf.gz`.
@@ -80,9 +89,3 @@ snakemake -s src/annotate-snps.smk --use-conda
 conda activate r-env
 Rscript src/merge_mafs.R
 ```
-
-## Figures
-The `src/` folder contains scripts to reproduce the figures. 
-Most filenames correspond to their associated figure. Survival analyses, including Figures 3C 
-and Supplemental Figure 5, can be found in `manuscript_survival_analysis.Rmd`. 
-These scripts can be run using the `r-env` environment.

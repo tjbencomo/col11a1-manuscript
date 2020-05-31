@@ -1,8 +1,8 @@
-##################################################################
-#Figure 1D - Percentage mutation rate by cancer type             #
-#Merge of SCC exome sequencing with TCGA data from cBioportal    #
-#See materials and methods for download and preprocessing instr. #
-##################################################################
+# File: figure1d.R
+# Author: Yonglu Che
+# Description: Script to generate Figure 1D - Percentage mutation rate by cancer type
+# Merge of SCC exome sequencing with TCGA data from cBioportal
+# See materials and methods for download and preprocessing instr.
 
 library(ggplot2)
 data_dir <- "data"

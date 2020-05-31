@@ -1,5 +1,5 @@
 # col11a1-manuscript
-Code for "Increased neoplastic invasion by non-cell autonomous mutant collagen COL11A1" by Lee et. al. 2020
+Code for "Mutant collagen COL11A1 enhances invasive cancer" by Lee et. al. 2020
 
 ## Data
 Mutation data for all 100 SCCs can be downloaded [here](https://drive.google.com/drive/folders/18HBfLd9vzNsC02caiXsDaw7GHDo7VOcx?usp=sharing). 

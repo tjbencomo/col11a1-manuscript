@@ -15,7 +15,7 @@ dependencies:
     - r-broom
     - r-gridExtra
     - r-corrplot
-    - r-tidyr
+    - r-tidyr=1.1
     - r-scales
     - r-cowplot
     - r-reshape2
@@ -24,3 +24,6 @@ dependencies:
     - r-annotables
     - bioconductor-deseq2
     - bioconductor-tximport
+    - r-patchwork
+    - r-data.table
+    - r-r.utils

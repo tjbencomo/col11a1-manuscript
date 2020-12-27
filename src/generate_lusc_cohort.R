@@ -1,3 +1,10 @@
+# File: generate_lusc_cohort.R
+# Description: Clean TCGA data for LUSC cohort into usable format
+# for gene signature survival analysis. Use survival data
+# from TCGA Curated Survival paper and phenotype information
+# from Phenotypes file. All data downloaded from UCSC Xena
+# December 2020.
+
 library(readr)
 library(readxl)
 library(dplyr)
@@ -12,51 +19,51 @@ reorganize_dataframe <- function(df) {
   df_t <- tibble::rownames_to_column(df_t, var = "Sample")
 }
 
-load_data <- function(tcga_dir, local_data_dir, cancer) {
-  clinical <- read_delim(file.path(tcga_dir, 
-                                   paste(cancer_type, "_clinicalMatrix", sep="")), 
-                         "\t", escape_double = FALSE, trim_ws = TRUE)
-  expr_data <- read_delim(file.path(tcga_dir, "HiSeqV2.gz"), "\t", 
-                          escape_double = FALSE, trim_ws = TRUE) %>%
-    column_to_rownames(var = "sample")
-  # interested.genes <- read_excel(file.path(local_data_dir, "survival_genes.xlsx"), 
-  #                                sheet = "Up") %>% pull(f)
-  interested.genes <- scan(file.path(local_data_dir, "264_gene_signature.txt"),
-                           what = character())
-  expr_data <- reorganize_dataframe(expr_data)
-  
-  # Missing gene names were manually investigated to look for aliases
-  # 2 genes could not be found, leaving 264 of 266 genes for the investigation
-  # See hnsc_revised_analysis.Rmd for more info
-  symbol_conversion <- c(EOGT="C3orf64", PRRC2C="BAT2L2", CTDNEP1="DULLARD", 
-                         ARHGEF28="RGNEF", DUS2="DUS2L", AKIP1="C11orf17", 
-                         ATG13="KIAA0652", CTSV="CTSL2", MISP="C19orf21", 
-                         SEPTIN9="SEPT9")
-  interested.genes[interested.genes == "43717"] <- "SEPTIN9"
-  interested.genes <- interested.genes[!interested.genes %in% c("RP11-231C14.4", "SMIM22")]
-  expr_data <- expr_data %>%
-    rename(!!symbol_conversion) %>%
-    select(c("Sample", interested.genes))
-  
-  # Filter patients based on missing data and sample type/duplicate patients
-  patients <- expr_data %>%
-    select(Sample, all_of(interested.genes)) %>%
-    left_join(clinical, by=c("Sample"="sampleID")) %>%
-    mutate(age = age_at_initial_pathologic_diagnosis) %>%
-    filter(sample_type == "Primary Tumor") %>%
-    distinct(patient_id, .keep_all = T) %>%
-    select(Sample, patient_id, `_PATIENT`, OS, OS.time, age, gender, clinical_stage,
-           radiation_therapy, interested.genes) %>%
-    drop_na() %>%
-    mutate(clinical_stage = forcats::fct_collapse(
-      clinical_stage,
-      "Stage I" = c("Stage I"),
-      "Stage II" = c("Stage II"),
-      "Stage III" = c("Stage III"),
-      "Stage IV" = c("Stage IVA", "Stage IVB", "Stage IVC")
-    )
-    )
-}
+# load_data <- function(tcga_dir, local_data_dir, cancer) {
+#   clinical <- read_delim(file.path(tcga_dir, 
+#                                    paste(cancer_type, "_clinicalMatrix", sep="")), 
+#                          "\t", escape_double = FALSE, trim_ws = TRUE)
+#   expr_data <- read_delim(file.path(tcga_dir, "HiSeqV2.gz"), "\t", 
+#                           escape_double = FALSE, trim_ws = TRUE) %>%
+#     column_to_rownames(var = "sample")
+#   # interested.genes <- read_excel(file.path(local_data_dir, "survival_genes.xlsx"), 
+#   #                                sheet = "Up") %>% pull(f)
+#   interested.genes <- scan(file.path(local_data_dir, "264_gene_signature.txt"),
+#                            what = character())
+#   expr_data <- reorganize_dataframe(expr_data)
+#   
+#   # Missing gene names were manually investigated to look for aliases
+#   # 2 genes could not be found, leaving 264 of 266 genes for the investigation
+#   # See hnsc_revised_analysis.Rmd for more info
+#   symbol_conversion <- c(EOGT="C3orf64", PRRC2C="BAT2L2", CTDNEP1="DULLARD", 
+#                          ARHGEF28="RGNEF", DUS2="DUS2L", AKIP1="C11orf17", 
+#                          ATG13="KIAA0652", CTSV="CTSL2", MISP="C19orf21", 
+#                          SEPTIN9="SEPT9")
+#   interested.genes[interested.genes == "43717"] <- "SEPTIN9"
+#   interested.genes <- interested.genes[!interested.genes %in% c("RP11-231C14.4", "SMIM22")]
+#   expr_data <- expr_data %>%
+#     rename(!!symbol_conversion) %>%
+#     select(c("Sample", interested.genes))
+#   
+#   # Filter patients based on missing data and sample type/duplicate patients
+#   patients <- expr_data %>%
+#     select(Sample, all_of(interested.genes)) %>%
+#     left_join(clinical, by=c("Sample"="sampleID")) %>%
+#     mutate(age = age_at_initial_pathologic_diagnosis) %>%
+#     filter(sample_type == "Primary Tumor") %>%
+#     distinct(patient_id, .keep_all = T) %>%
+#     select(Sample, patient_id, `_PATIENT`, OS, OS.time, age, gender, clinical_stage,
+#            radiation_therapy, interested.genes) %>%
+#     drop_na() %>%
+#     mutate(clinical_stage = forcats::fct_collapse(
+#       clinical_stage,
+#       "Stage I" = c("Stage I"),
+#       "Stage II" = c("Stage II"),
+#       "Stage III" = c("Stage III"),
+#       "Stage IV" = c("Stage IVA", "Stage IVB", "Stage IVC")
+#     )
+#     )
+# }
 
 # cancer_type <- "LUSC"
 # tcga_dir <- file.path("~/lee-lab-data/tcga-data", tolower(cancer_type))

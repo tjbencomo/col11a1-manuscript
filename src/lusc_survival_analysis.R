@@ -1,3 +1,14 @@
+# File : lusc_survival_analysis.R
+# Description: Investigate correlation between
+# 264 gene signature identified from COL11A1 RNA-Seq
+# experiments and overall survival in LUSC. Unlike
+# HNSC and CESC, the gene signature  shows weak
+# evidence that suggests the PH assumption is not
+# satisfied. Restricted cubic spline modeling of the
+# gene signature corrects the PH assumption and reaches
+# the same overall conclusion, so we keep the gene signature
+# as a linear relationship to fit with the HNSC and CESC analyses.
+
 library(readr)
 library(dplyr)
 library(ggplot2)

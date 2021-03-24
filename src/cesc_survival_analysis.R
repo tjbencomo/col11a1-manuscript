@@ -43,6 +43,16 @@ print(summary(full.fit))
 print("Proportional hazards check")
 print(cox.zph(full.fit))
 
+## Likelihood Ratio Test and Added Info
+subset.fit <- cph(Surv(OS.time, OS) ~ age + clinical_stage + 
+                      strat(radiation_therapy), data=df, x=T, y=T)
+full.rms.fit <- cph(Surv(OS.time, OS) ~ age + clinical_stage + 
+                      strat(radiation_therapy) + signature, data=df, x=T, y=T)
+print(lrtest(subset.fit, full.rms.fit))
+print(paste("New information added: ", 
+            1 - (subset.fit$stats['Model L.R.'] / full.rms.fit$stats['Model L.R.']),
+            "%", sep=""))
+
 
 ### Plotting Code for Manuscript
 km_df <- df %>%

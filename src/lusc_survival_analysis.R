@@ -44,8 +44,8 @@ print(cox.zph(sig.fit))
 
 sig.rcs.fit <- cph(Surv(OS.time, OS) ~ rcs(signature, 3), data=df,
                    x=T, y=T)
-anova(sig.rcs.fit)
-cox.zph(sig.rcs.fit)
+print(anova(sig.rcs.fit))
+print(cox.zph(sig.rcs.fit))
 ggplot(Predict(sig.rcs.fit)) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
   labs(x = "264 Gene Signature (Z-Score)",
@@ -72,6 +72,17 @@ ggplot(Predict(full.rcs.fit, signature)) +
        caption = "") +
   ggtitle("Gene Signature vs OS after adjustments")
 
+## Likelihood Ratio Test and Added Info
+subset.fit <- cph(Surv(OS.time, OS) ~ age + gender + pathologic_stage
+                  + strat(radiation_therapy), data=df,
+                  x=T, y=T)
+full.rms.fit <- cph(Surv(OS.time, OS) ~ age + gender + pathologic_stage + 
+                        strat(radiation_therapy) + signature, data=df,
+                      x=T, y=T)
+print(lrtest(subset.fit, full.rms.fit))
+print(paste("New information added: ", 
+            1 - (subset.fit$stats['Model L.R.'] / full.rms.fit$stats['Model L.R.']),
+            "%", sep=""))
 
 ## Plotting Code for Manuscript
 
@@ -80,7 +91,7 @@ km_df <- df %>%
   mutate(cut_sig = ifelse(signature > 0, "Upregulated", "Downregulated")) %>%
   mutate(cut_sig = factor(cut_sig, levels = c("Upregulated", "Downregulated")))
 km.fit <- survfit(Surv(OS.time, OS) ~ cut_sig, data=km_df)
-ggsurvplot(km.fit, data=km_df, legend.lab = c("High Expression", "Low Expression"))$plot + 
+ggsurvplot(km.fit, data=km_df, legend.lab = c("High Expression", "Low Expression"))$plot +
   labs(x = "Time (Days)", y = "LUSC (TCGA) Survival Probability (%)")
 
 
@@ -92,7 +103,7 @@ ggplot(Predict(full.rms.fit, signature)) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
   labs(x = "264 Gene Signature (Z-Score)",
        y = "Log Hazard Ratio",
-       caption = "") 
+       caption = "")
 
 ## Cox Regression Table
 fit.table <- broom::tidy(full.fit) %>%

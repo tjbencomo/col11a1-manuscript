@@ -90,9 +90,51 @@ statistic4 <- function(mutations) {
     
 }
 
+# Number of total coding COL11A1 mutations seen cross all samples
+statistic5 <- function(mutations) {
+  coding_types <- c("Missense_Mutation", "Nonsense_Mutation", "Splice_Site")
+  stat <- mutations %>%
+    filter(Hugo_Symbol == "COL11A1", Variant_Classification %in% coding_types) %>%
+    count() %>%
+    pull(n)
+  output <- "Total number of COL11A1 mutations: "
+  print(paste(output, stat))
+}
+
+# Number of COL11A1 mutations that are P/G substitutions (should we include nonsense?)
+statistic6 <- function(mutations) {
+  coding_types <- c("Missense_Mutation", "Nonsense_Mutation", "Splice_Site")
+  stat <- mutations %>%
+    filter(Hugo_Symbol == "COL11A1", Variant_Classification %in% coding_types) %>%
+    mutate(
+      ref_aa = str_extract(HGVSp_Short, "[A-Z]"),
+      position = str_extract(HGVSp_Short, "[0-9]+"),
+      position = as.numeric(position),
+      mutant_aa = str_extract(str_sub(HGVSp_Short, 4), "[A-Z]+|\\*"),
+      mutant_aa = case_when(
+        str_detect(HGVSp_Short, "_splice") ~ "splice",
+        str_detect(HGVSp_Short, "=") ~ ref_aa,
+        TRUE ~ mutant_aa
+      )) %>%
+    mutate(
+      pg_mutation = case_when(
+        ref_aa %in% c("P", "G") & !(mutant_aa %in%c("P", "G")) ~ 1,
+        TRUE  ~ 0
+      )) %>%
+    summarize(n_pg_muts = sum(pg_mutation)) %>%
+    pull(n_pg_muts)
+  total_col11a1_coding_muts <- mutations %>%
+    filter(Hugo_Symbol == "COL11A1", Variant_Classification %in% coding_types) %>%
+    count() %>%
+    pull(n)
+  output <- "Number of COL11A1 coding mutations that are P/G substitutions: "
+  print(paste(output, stat, "/", total_col11a1_coding_muts))
+}
+
 # 5. Mutation rates of COL11A1 in TCGA cancers - see Figure 1D's code
 
 # 6. Survival analysis 264 gene signature - see manuscript_survival_analysis.R
+
 
 data_dir <- "data"
 filename <- "mutations.maf.gz"
@@ -101,3 +143,5 @@ mutations <- load_mutations(file.path(data_dir, filename))
 statistic1(mutations)
 statistic3(mutations)
 statistic4(mutations)
+statistic5(mutations)
+statistic6(mutations)

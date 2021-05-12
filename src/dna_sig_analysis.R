@@ -11,6 +11,7 @@ library(data.table)
 library(cowplot)
 library(readxl)
 library(scales)
+library(tidyr)
 library(stringr)
 library(dplyr)
 library(ggplot2)
@@ -93,27 +94,56 @@ patient_counts <- df %>%
   pivot_longer(-patient, names_to = "type", values_to = "prop") %>%
   inner_join(patient_info)
 
+#########################################################
+## Cohort Comparison
+#########################################################
 
+
+#Compare transversion level in PD vs other samples
+with(
+  patient_counts %>%
+    filter(diff_status != "WD", type == "Transversion") %>%
+    mutate(dstatus = ifelse(diff_status == "PD", "PD", "Other")),
+  wilcox.test(prop ~ dstatus)
+)
+
+# Compare transversion level in WD vs other samples
+with(
+  patient_counts %>%
+    filter(diff_status != "PD", type == "Transversion") %>%
+    mutate(dstatus = ifelse(diff_status == "WD", "WD", "Other")),
+  wilcox.test(prop ~ dstatus)
+)
+
+# Omnibus test for differences between WD/PD/Others
+with(
+  patient_counts %>%
+    filter(type == "Transversion"),
+  kruskal.test(prop ~ diff_status)
+)
+
+# Plot Transversion percentages per group
+patient_counts %>%
+  mutate(diff_status = case_when(
+    diff_status == "Unknown" ~ "Other",
+    TRUE ~ diff_status
+  )) %>%
+  mutate(diff_status = factor(diff_status, levels = c("Other", "WD", "PD"))) %>%
+  filter(type == "Transversion") %>%
+  ggplot(aes(diff_status, prop)) +
+  geom_boxplot(aes(fill = diff_status)) +
+  theme_bw() +
+  labs(x = "Differentiation Level", y = "% Transversion Mutations") +
+  guides(fill = FALSE)
+
+
+
+#########################################################
+## Plotting Code
+#########################################################
 sampleid_order <- rev(unique(patient_counts %>% filter(cohort == "South") %>% pull(Sample.ID)))
 
 colors <- c("#3D8249", "#00A1D5")
-# patient_counts %>%
-#   filter(cohort == "South") %>%
-#   mutate(ImmuneStatus = fct_recode(
-#     ImmuneStatus,
-#     CardiacTransplant = "CT",
-#     ImmunoCompetent = "IC",
-#     ImmunoSuppressed = "IS",
-#     RenalTransplant = "RT"
-#   )) %>%
-#   ggplot(aes(as.factor(Sample.ID), prop, fill = type)) +
-#   geom_bar(position = "fill", stat = "identity") +
-#   facet_wrap(~ImmuneStatus, scales = "free_x") +
-#   theme_bw() +
-#   labs(x = "", y = "% Mutations") +
-#   scale_fill_manual(values = colors) +
-#   guides(fill = guide_legend(title = ""))
-
 
 immune_plot <- patient_counts %>%
   filter(cohort == "South") %>%

@@ -37,8 +37,9 @@ snps <- read_delim("data/mutations.maf.gz",
                                   t_ref_count = "c", t_alt_count = "c", t_depth = "c", 
                                   n_depth = "c", n_alt_count = "c", n_ref_count = "c"
                                 ))
-snps <- snps %>% filter(Hugo_Symbol == "COL11A1", Variant_Classification %in% c("Missense_Mutation",
-                                                                                "Nonsense_Mutation"))
+coding_types <- c("Missense_Mutation", "Nonsense_Mutation", "Splice_Site")
+snps <- snps %>% 
+  filter(Hugo_Symbol == "COL11A1", Variant_Classification %in% coding_types)
 
 snps <- snps[complete.cases(snps$HGVSp_Short), ]
 extracted_aas <- snps$HGVSp_Short %>% str_extract_all("[A-Z]", simplify = T)

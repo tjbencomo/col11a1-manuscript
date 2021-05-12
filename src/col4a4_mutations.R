@@ -30,7 +30,7 @@ infp <- file.path(data_dir, "mutations.maf.gz")
 
 muts <- read_tsv(infp)
 
-coding <- c("Missense_Mutation", "Nonsense_Mutation")
+coding <- c("Missense_Mutation", "Nonsense_Mutation", "Splice_Site")
 col4a4 <- muts %>%
   filter(
     Hugo_Symbol == "COL4A4", 

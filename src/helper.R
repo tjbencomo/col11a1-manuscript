@@ -63,7 +63,10 @@ get_col11a1_regions <- Vectorize(get_col11a1_regions_element)
 
 ## Determines whether an AA position for a given collagen
 ## falls in the triple helix region as specified by UniProt
-isInHelix_element <- function(gene, position) {
+isInHelix <- function(gene, position) {
+  if(is.na(position)) {
+    return(NA)
+  }
   if (gene == "COL2A1" & position>= 201 & position <= 1214) {
     return(TRUE)
   } else if (gene == "COL11A2" & position >= 487 & position <= 1500) {
@@ -76,4 +79,3 @@ isInHelix_element <- function(gene, position) {
     return(FALSE)
   }
 }
-isInHelix <- Vectorize(isInHelix_element)

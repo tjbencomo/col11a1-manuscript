@@ -92,6 +92,7 @@ p <- ggplot(melted, aes(variable, factor(region, levels = region.names))) +
   coord_flip() +
   scale_fill_distiller(palette = "Reds", direction = 1, name = "Mutations/AA", 
                        limits = c(0, .15), breaks = c(0, .05, .1, .15)) +
+  theme_classic() +
   labs(x = "", y = "Region")
 print(p)
 

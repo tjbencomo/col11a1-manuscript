@@ -50,7 +50,7 @@ full.rms.fit <- cph(Surv(OS.time, OS) ~ age + clinical_stage +
                       strat(radiation_therapy) + signature, data=df, x=T, y=T)
 print(lrtest(subset.fit, full.rms.fit))
 print(paste("New information added: ", 
-            1 - (subset.fit$stats['Model L.R.'] / full.rms.fit$stats['Model L.R.']),
+            (1 - (subset.fit$stats['Model L.R.'] / full.rms.fit$stats['Model L.R.'])) * 100,
             "%", sep=""))
 
 

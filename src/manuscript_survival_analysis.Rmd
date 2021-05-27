@@ -223,9 +223,10 @@ patients.full_sig.km <- patients %>%
   mutate(full_sig_group = case_when(
     full_signature > 0 ~ "Upregulated",
     full_signature <= 0 ~ "Downregulated"
-  ))
+  )) %>%
+  mutate(full_sig_group = factor(full_sig_group, levels = c("Upregulated", "Downregulated")))
 full.sig.km.fit <- survfit(Surv(OS.time, OS) ~ full_sig_group, data=patients.full_sig.km)
-survminer::ggsurvplot(full.sig.km.fit, data=patients.full_sig.km, legend.labs =c("Downregulated", "Upregulated"))
+survminer::ggsurvplot(full.sig.km.fit, data=patients.full_sig.km, legend.lab = c("High Expression", "Low Expression"))$plot + labs(x = "Time (Days)", y = "HNSC (TCGA) Survival Probability (%)")
 ```
 
 Figure S5A (Table)

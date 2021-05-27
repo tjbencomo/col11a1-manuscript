@@ -75,6 +75,26 @@ isInHelix <- function(gene, position) {
     return(TRUE)
   } else if (gene == "COL11A1" & ((position >= 420 & position <= 508) | (position >= 529 & position <= 1542))) {
     return(TRUE)
+  } else if (gene == "COL19A1" & position %in% c(292:351, 370:429, 448:688, 700:818, 833:1012, 1054:1111)) {
+    return(TRUE)
+  } else if (gene == "COL6A3" & position %in% 2039:2375) {
+    return(TRUE)
+  } else if (gene == "COL4A4" & position %in% 65:1459) {
+    return(TRUE)
+  } else if (gene == "COL6A6" & position %in% 1392:1725) {
+    return(TRUE)
+  } else if (gene == "COL15A1" & position %in% c(556:573, 619:732, 764:798, 823:867, 879:949, 984:1013, 1028:1045, 1053:1107, 1118:1132)) {
+    return(TRUE)
+  } else if (gene == "COL3A1" & position %in% 168:1196) {
+    return(TRUE)
+  } else if (gene == "COL4A1" & position %in% 173:1440) {
+    return(TRUE)
+  } else if (gene == "COL4A3" & position %in% 43:1438) {
+    return(TRUE)
+  } else if (gene == "COL6A5" & position %in% 1395:1728) {
+    return(TRUE)
+  } else if (gene == "COL4A2" & position %in% 184:1484) {
+    return(TRUE)
   } else {
     return(FALSE)
   }

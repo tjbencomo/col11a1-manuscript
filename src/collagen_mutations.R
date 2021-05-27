@@ -21,8 +21,10 @@ source("src/helper.R")
 
 fp <- file.path("data", "collagen_annotations.maf")
 pfp <- file.path("data", "patient_info.csv")
-genes <- c("COL2A1", "COL11A1", "COL11A2", "COL5A1", "COL5A2",
-           "COL6A6", "COL22A1", "COL6A3", "COL12A1", "COL14A1")
+# genes <- c("COL2A1", "COL11A1", "COL11A2", "COL5A1", "COL5A2",
+#            "COL6A6", "COL22A1", "COL6A3", "COL12A1", "COL14A1")
+genes <- c("COL2A1", "COL11A1", "COL11A2", "COL5A1", "COL5A2")
+
 df <- read_tsv(fp)
 patients <- read_csv(pfp)
 patients <- patients %>%
@@ -102,11 +104,11 @@ col11a2 <- mutmat$patient[mutmat$COL11A2 == 1]
 col2a1 <- mutmat$patient[mutmat$COL2A1 == 1]
 col5a1 <- mutmat$patient[mutmat$COL5A1 == 1]
 col5a2 <- mutmat$patient[mutmat$COL5A2 == 1]
-col6a6 <- mutmat$patient[mutmat$COL6A6 == 1]
-col22a1 <- mutmat$patient[mutmat$COL22A1 == 1]
-col6a3 <- mutmat$patient[mutmat$COL6A3 == 1]
-col12a1 <- mutmat$patient[mutmat$COL12A1 == 1]
-col14a1 <- mutmat$patient[mutmat$COL14A1 == 1]
+# col6a6 <- mutmat$patient[mutmat$COL6A6 == 1]
+# col22a1 <- mutmat$patient[mutmat$COL22A1 == 1]
+# col6a3 <- mutmat$patient[mutmat$COL6A3 == 1]
+# col12a1 <- mutmat$patient[mutmat$COL12A1 == 1]
+# col14a1 <- mutmat$patient[mutmat$COL14A1 == 1]
 
 # inputList <- list(COL11A1 = col11a1, COL11A2 = col11a2, COL2A1 = col2a1,
 #                   COL5A1 = col5a1, COL5A2 = col5a2, COL6A6 = col6a6,
@@ -117,7 +119,7 @@ inputList <- list(COL11A1 = col11a1, COL11A2 = col11a2, COL2A1 = col2a1,
                   COL5A1 = col5a1, COL5A2 = col5a2)
 
 
-# upset(fromList(inputList), order.by = "freq", nsets = length(inputList), nintersects = NA)
-upset(fromList(inputList), order.by = "freq", nsets = 6)
-
-upset(fromList(inputList), nsets = length(inputList))
+upset(fromList(inputList), order.by = "freq", nsets = length(inputList), nintersects = NA)
+# upset(fromList(inputList), order.by = "freq", nsets = 6)
+# 
+# upset(fromList(inputList), nsets = length(inputList))

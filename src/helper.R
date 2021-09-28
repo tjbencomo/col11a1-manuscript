@@ -1,3 +1,5 @@
+## Description: Various helper functions
+
 library(dplyr)
 library(stringr)
 

@@ -1,3 +1,5 @@
+## Description: Calculate helix breaking mutation correlation between COL11A1 and other collagens
+
 library(readr)
 library(dplyr)
 library(stringr)

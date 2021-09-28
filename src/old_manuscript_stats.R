@@ -1,6 +1,6 @@
 # File: manuscript_stats.R
 # Author: Tomas Bencomo
-# Description: This script reproduces statistics
+# Description: OLDER version of script to calculate statistics
 # quoted in the manuscript
 
 library(readr)

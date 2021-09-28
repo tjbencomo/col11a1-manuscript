@@ -1,3 +1,5 @@
+## Description: Calculate statistics for manuscript text
+
 library(readr)
 library(dplyr)
 source("src/helper.R")

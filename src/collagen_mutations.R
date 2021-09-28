@@ -19,7 +19,7 @@ library(jaccard)
 library(UpSetR)
 source("src/helper.R")
 
-fp <- file.path("data", "collagen_annotations.maf")
+fp <- file.path("data", "collagen_annotations.maf.gz")
 pfp <- file.path("data", "patient_info.csv")
 # genes <- c("COL2A1", "COL11A1", "COL11A2", "COL5A1", "COL5A2",
 #            "COL6A6", "COL22A1", "COL6A3", "COL12A1", "COL14A1")

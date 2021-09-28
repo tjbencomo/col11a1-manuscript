@@ -1,5 +1,4 @@
-## Create heatmap similar to Figure 1C for COL4A4
-## for reviewer request.
+## Description: Create basis for figure S5c showing COL4A4 mutations
 
 library(readr)
 library(dplyr)

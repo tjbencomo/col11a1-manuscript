@@ -51,3 +51,6 @@ for (i in 1:length(genes)) {
 }
 jcdf <- tibble(G1 = "COL11A1", G2 = genes, jaccard_coef = unlist(jc_list))
 print(jcdf)
+
+write_csv(jcdf, "data/collagen_helix_breaker_correlations.csv")
+

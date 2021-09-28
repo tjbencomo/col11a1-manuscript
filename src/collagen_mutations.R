@@ -123,3 +123,4 @@ upset(fromList(inputList), order.by = "freq", nsets = length(inputList), ninters
 # upset(fromList(inputList), order.by = "freq", nsets = 6)
 # 
 # upset(fromList(inputList), nsets = length(inputList))
+write_csv(jcdf, "data/collagen_heterotrimer_correlation.csv")
